@@ -28,7 +28,7 @@ helptext3 = """
 **📖 Help (3 of 3)**
 
 **Terms & Conditions**:
-__Account Recovery is Transpant. It will not leak or save any confidential
+__Account Recovery is Transparent. It will not leak or save any confidential
 Information over the internet or to someone else.
 nothing will be logged or saved. However after you Agree on this,
 the message id will be cached in memory to understand which message to delete.

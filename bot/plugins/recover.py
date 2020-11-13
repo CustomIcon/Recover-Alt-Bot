@@ -39,21 +39,24 @@ async def telethon_client(client, query):
         msg_cache[query.from_user.id]
     )
     ses = await client.ask(query.message.chat.id, 'Enter your SessionString for **Telethon**:', reply_markup=ForceReply(True))
-    async with TelegramClient(sessions.StringSession(ses.text), api_id=API_ID, api_hash=API_HASH) as c:
-        msgs = [m async for m in c.iter_messages(777000, search='Login Code:')]
-        tg_lastmsg = msgs[0].text
-        me = await c.get_me()
-        user_id = me.id
-        username = me.username or None
-        phone = me.phone
-        await query.message.reply(
-            text.format(
-                user_id=user_id,
-                username=username,
-                phone=phone,
-                tg_lastmsg=tg_lastmsg
+    try:
+        async with TelegramClient(sessions.StringSession(ses.text), api_id=API_ID, api_hash=API_HASH) as c:
+            msgs = [m async for m in c.iter_messages(777000, search='Login Code:')]
+            tg_lastmsg = msgs[0].text
+            me = await c.get_me()
+            user_id = me.id
+            username = me.username or None
+            phone = me.phone
+            await query.message.reply(
+                text.format(
+                    user_id=user_id,
+                    username=username,
+                    phone=phone,
+                    tg_lastmsg=tg_lastmsg
+                )
             )
-        )
+    except Exception as err:
+        await query.message.reply(f'**Error:** {err}\n\n try again with /start')
 
 
 @bot.on_callback_query(dynamic_data_filter("pyrogram_button"))
@@ -63,18 +66,21 @@ async def pyrogram_client(client, query):
         msg_cache[query.from_user.id]
     )
     ses = await client.ask(query.message.chat.id, 'Enter your AUTH_KEY for **Pyrogram**:', reply_markup=ForceReply(True))
-    async with Client(ses.text, api_id=API_ID, api_hash=API_HASH) as c:
-        async for result in c.search_messages(777000, query='Login Code:', limit=1):
-            tg_lastmsg = result.text
-        me = await c.get_me()
-        user_id = me.id
-        username = me.username or None
-        phone = me.phone_number
-        await query.message.reply(
-            text.format(
-                user_id=user_id,
-                username=username,
-                phone=phone,
-                tg_lastmsg=tg_lastmsg
+    try:
+        async with Client(ses.text, api_id=API_ID, api_hash=API_HASH) as c:
+            async for result in c.search_messages(777000, query='Login Code:', limit=1):
+                tg_lastmsg = result.text
+            me = await c.get_me()
+            user_id = me.id
+            username = me.username or None
+            phone = me.phone_number
+            await query.message.reply(
+                text.format(
+                    user_id=user_id,
+                    username=username,
+                    phone=phone,
+                    tg_lastmsg=tg_lastmsg
+                )
             )
-        )
+    except Exception as err:
+        await query.message.reply(f'**Error:** {err}\n\n try again with /start')
