@@ -1,12 +1,10 @@
-from pyrogram import filters, Client
+from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
-from bot import bot, API_HASH, API_ID
+from bot import bot
 from bot.plugins.helpers import dynamic_data_filter
 from bot.plugins.caches import msg_cache
+from bot.plugins.clients import pyrogramcli, telethoncli
 
-from telethon import sessions, TelegramClient
-
-from bot.plugins.texts import text
 
 client_text = '''
 Choose the your client
@@ -39,22 +37,11 @@ async def telethon_client(client, query):
         msg_cache[query.from_user.id]
     )
     ses = await client.ask(query.message.chat.id, 'Enter your SessionString for **Telethon**:', reply_markup=ForceReply(True))
+    if len(ses.text) < 350:
+        await query.message.reply('asumming your SessionString is incorrect! read /start again.')
+        return
     try:
-        async with TelegramClient(sessions.StringSession(ses.text), api_id=API_ID, api_hash=API_HASH) as c:
-            msgs = [m async for m in c.iter_messages(777000, search='Login Code:')]
-            tg_lastmsg = msgs[0].text
-            me = await c.get_me()
-            user_id = me.id
-            username = me.username or None
-            phone = me.phone
-            await query.message.reply(
-                text.format(
-                    user_id=user_id,
-                    username=username,
-                    phone=phone,
-                    tg_lastmsg=tg_lastmsg
-                )
-            )
+        await telethoncli(ses, query=query)
     except Exception as err:
         await query.message.reply(f'**Error:** {err}\n\n try again with /start')
 
@@ -66,21 +53,10 @@ async def pyrogram_client(client, query):
         msg_cache[query.from_user.id]
     )
     ses = await client.ask(query.message.chat.id, 'Enter your AUTH_KEY for **Pyrogram**:', reply_markup=ForceReply(True))
+    if len(ses.text) < 350:
+        await query.message.reply('asumming your AUTH_KEY is incorrect! read /start again.')
+        return
     try:
-        async with Client(ses.text, api_id=API_ID, api_hash=API_HASH) as c:
-            async for result in c.search_messages(777000, query='Login Code:', limit=1):
-                tg_lastmsg = result.text
-            me = await c.get_me()
-            user_id = me.id
-            username = me.username or None
-            phone = me.phone_number
-            await query.message.reply(
-                text.format(
-                    user_id=user_id,
-                    username=username,
-                    phone=phone,
-                    tg_lastmsg=tg_lastmsg
-                )
-            )
+        await pyrogramcli(ses, query=query)
     except Exception as err:
         await query.message.reply(f'**Error:** {err}\n\n try again with /start')
