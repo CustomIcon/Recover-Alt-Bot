@@ -6,6 +6,7 @@ I can recover your lost Telegram Account (Not the deleted or Banned Accounts)
 
 helptext1 = """
 **📖 Help (1 of 3)**
+
 To use me you will need a session string.
 
 I wont help you if you do not have a valid session string
@@ -13,6 +14,7 @@ I wont help you if you do not have a valid session string
 
 helptext2 = """
 **📖 Help (2 of 3)**
+
 How does this bot work?
 
 with your session string I can forward you the last message recieved from Telegram Login.
@@ -28,11 +30,10 @@ helptext3 = """
 **📖 Help (3 of 3)**
 
 **Terms & Conditions**:
+
 __Account Recovery is Transparent. It will not leak or save any confidential
-Information over the internet or to someone else.
-nothing will be logged or saved. However after you Agree on this,
-the message id will be cached in memory to understand which message to delete.
-Currently 2 Libraries are supported by this bot (Pyrogram & Telethon)
+Information over the internet or to someone else. nothing will be logged or saved. However after you Agree on this,
+the message id will be cached in memory to understand which message to delete. Currently 2 Libraries are supported by this bot (Pyrogram & Telethon)
 which is used by many people to create bots and userbots here on Telegram.__
 """
 

@@ -5,7 +5,7 @@ from pyrogram import Client
 
 API_ID = environ.get("API_ID", None)
 API_HASH = environ.get("API_HASH", None)
-TOKEN = environ.get("TOKEN", None)
+SESSION = environ.get("SESSION", None)
 
 
 class bot(Client):
@@ -19,10 +19,9 @@ class bot(Client):
             root=f"{name}.plugins",
         )
         super().__init__(
-            name,
+            SESSION or config.get('pyrogram', 'string'),
             api_id=API_ID,
             api_hash=API_HASH,
-            bot_token=TOKEN or config.get("pyrogram", "token"),
             config_file=config_file,
             workers=16,
             plugins=plugins,
